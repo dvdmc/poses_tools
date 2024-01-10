@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "poses_tools"
+authors = [{name = "David Morilla-Cabello", email = "davidmc@unizar.es"}]
+readme="README.md"
+requires-python=">=3.7.0"
+version = "0.1.0"
+dependencies=[
+    "numpy",
+]
+
+[tool.setuptools]
+packages = ["poses_tools"]
+
+# black
+[tool.black]
+line-length = 120
