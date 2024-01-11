@@ -47,8 +47,28 @@ class FrameConverter:
             self.transform_function = self.airsim_to_colmap_pose
         elif from_frame == "colmap" and to_frame == "airsim":
             self.transform_function = self.colmap_to_airsim_pose
+        elif from_frame == "test" and to_frame == "ros":
+            self.transform_function = self.test_to_ros_pose
         else:
             raise NotImplementedError
+    
+    def identity(self, t: np.ndarray, rot: Rotation) -> Tuple[np.ndarray, Rotation]:
+        """
+        Identity transform function
+        """
+        return t, rot
+    
+    def test_to_ros_pose(
+        self, t: np.ndarray, rot: Rotation
+    ) -> Tuple[np.ndarray, Rotation]:
+        """Converts test pose to ROS pose
+        Args:
+            t: translation (3x1)
+            rot: rotation from scipy
+        Returns:
+            translation (3x1), rotation from scipy
+        """
+        return self.identity(t, rot)
         
 
     def ros_to_airsim_pose(
