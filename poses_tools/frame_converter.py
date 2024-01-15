@@ -117,8 +117,8 @@ class FrameConverter:
         p = self.rotation.apply(p)
         
         x = p[0]
-        y = -p[1]
-        z = -p[2]
+        y = p[1]
+        z = p[2]
 
         rotation_airsim_to_ros = np.array([[1,0,0],[0,-1,0],[0,0,-1]])
         yaw_rotated = self.rotation_inv * rot
