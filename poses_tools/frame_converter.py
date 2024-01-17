@@ -41,6 +41,8 @@ class FrameConverter:
         """
         if from_frame == "ros" and to_frame == "airsim":
             self.transform_function = self.ros_to_airsim_pose
+        elif from_frame == "scannet" and to_frame == "ros":
+            self.transform_function = self.scannet_to_ros_pose
         elif from_frame == "airsim" and to_frame == "ros":
             self.transform_function = self.airsim_to_ros_pose
         elif from_frame == "airsim" and to_frame == "colmap":
@@ -70,7 +72,39 @@ class FrameConverter:
         """
         return self.identity(t, rot)
         
+    def scannet_to_ros_pose(
+        self, t: np.ndarray, rot: Rotation
+    ) -> Tuple[np.ndarray, Rotation]:
+        """Converts Scannet pose to world pose
+            Found by trial and error...
+            The only reference is this incomplete docs:
+            # In pose, the axis are Y front X right Z up
+            # In ROS, the axis are X front Y left Z up
+            # Rotate the pose by 90 degrees around Z axis
+        Args:
+            t: translation (3x1)
+            rot: rotation from scipy
+        Returns:
+            translation (3x1), rotation from scipy
+        """
+        # Transform translation
+        p = np.array([t[0], t[1], t[2]])
+        
+        # Axis flip
+        x = p[0]
+        y = p[1]
+        z = p[2]
 
+        # Transform rotation
+        rotation_scannet_to_ros = np.array([[0, -1, 0], 
+                                            [0, 0, -1], 
+                                            [1, 0, 0]])
+        rot_matrix = rot.as_matrix()
+        base_change = rot_matrix @ rotation_scannet_to_ros
+        rotation = Rotation.from_matrix(base_change)
+
+        return np.array([x, y, z]), rotation
+    
     def ros_to_airsim_pose(
         self, t: np.ndarray, rot: Rotation
     ) -> Tuple[np.ndarray, Rotation]:
