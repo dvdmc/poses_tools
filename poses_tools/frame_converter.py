@@ -43,7 +43,11 @@ class FrameConverter:
             self.transform_function = self.ros_to_airsim_pose
         elif from_frame == "scannet" and to_frame == "ros":
             self.transform_function = self.scannet_to_ros_pose
+        elif from_frame == "scannet_voc" and to_frame == "ros":
+            self.transform_function = self.identity
         elif from_frame == "airsim" and to_frame == "ros":
+            self.transform_function = self.airsim_to_ros_pose
+        elif from_frame == "airsim" and to_frame == "scannet":
             self.transform_function = self.airsim_to_ros_pose
         elif from_frame == "airsim" and to_frame == "colmap":
             self.transform_function = self.airsim_to_colmap_pose
